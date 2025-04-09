@@ -1,0 +1,6 @@
+Metadata-Version: 2.4
+Name: andrewtom
+Version: 0.1.0
+Summary: Integration Methods
+Requires-Dist: flask
+Requires-Dist: click
