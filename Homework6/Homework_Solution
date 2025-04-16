@@ -1,3 +1,0 @@
-import andrewtom.Integrate
-
-andrewtom.Integrate.simpson()

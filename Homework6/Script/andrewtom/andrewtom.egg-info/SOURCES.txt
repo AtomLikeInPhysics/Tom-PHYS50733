@@ -1,0 +1,8 @@
+pyproject.toml
+andrewtom/Integrate.py
+andrewtom/__init__.py
+andrewtom.egg-info/PKG-INFO
+andrewtom.egg-info/SOURCES.txt
+andrewtom.egg-info/dependency_links.txt
+andrewtom.egg-info/requires.txt
+andrewtom.egg-info/top_level.txt

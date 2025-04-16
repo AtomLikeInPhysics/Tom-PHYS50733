@@ -1,0 +1,4 @@
+For this homework assignment I made a pip installable package that has the code we made for the simpson and trapazoid rule integration methods.
+I applied these methods to 3 functions without an analytical solution and then plotted them.
+
+To install the package cd into the Script file and "pip install -e ." The package installs as "andrewtom".
