@@ -12,10 +12,10 @@ Rearth = 6378.137e3 #[m]
 
 G = 6.67e-11 # [N m^2 kg^-2]
 
-d = 0.10*Rearth + Rearth
+d = 0.10*Rearth + Rearth    #Height of the mountain
 
-vorb = np.sqrt(G*Mearth / d)
-vesc = np.sqrt(2) * vorb
+vorb = np.sqrt(G*Mearth / d)    #Calculated orbital velocity
+vesc = np.sqrt(2) * vorb        #Derived escape velocity(check paper)
 
 #Governing Equations:
 
@@ -60,11 +60,24 @@ def RK(r):
     return([xpnt,ypnt],[VelX,VelY])
 
 
-pos1, vel1 = RK([0, vorb, d, 0])
-pos2, vel2 = RK([0, vesc, d, 0])
-pos3, vel3 = RK([0, vorb*0.75, d, 0])
+pos1, vel1 = np.array(RK([0, vorb, d, 0]))
+pos2, vel2 = np.array(RK([0, vesc, d, 0]))
+pos3, vel3 = np.array(RK([0, vorb*0.75, d, 0]))
 
-Earth = plt.Circle((0,0),Rearth)
+
+
+plt.plot(t,np.sqrt(pos1[0]**2 + pos1[1]**2),label = 'Orbiting')
+plt.plot(t,np.sqrt(pos2[0]**2 + pos2[1]**2),label = 'Escape')
+plt.plot(t,np.sqrt(pos3[0]**2 + pos3[1]**2), label = '75% Orbital Velocity')
+plt.axhline(y=Rearth, c='r')
+plt.xlabel('Time [s]')
+plt.ylabel('Height')
+plt.title('Height of Newtons Cannonball')
+plt.legend()
+plt.savefig('Cannonball Height')
+plt.show()
+
+Earth = plt.Circle((0,0),Rearth)    #Making Earth
 
 fig, ax = plt.subplots()
 
@@ -81,28 +94,55 @@ Cannonplt2 = ax.scatter(x2,y2, c='g')
 Cannonplt3 = ax.scatter(x3,y3, c='orange')
 ax.add_patch(Earth)
 
+crashed1 = False
+crashed2 = False
+crashed3 = False
+
+crashed = {'1': False, '2': False, '3': False}
+
 def update(frame):
-    x1 = pos1[0][frame]
-    y1 = pos1[1][frame]
-    # update the scatter plot:
-    data1 = [x1, y1]
-    Cannonplt1.set_offsets(data1)
+    if np.sqrt(pos1[0][frame]**2 + pos1[1][frame]**2) > Rearth:
+        if not crashed['1']:
+            x1 = pos1[0][frame]
+            y1 = pos1[1][frame]
+            # update the scatter plot:
+            data1 = [x1, y1]
+            Cannonplt1.set_offsets(data1)
+        else:
+            data1 = [0, 0]
+            Cannonplt1.set_offsets(data1)
+    else:
+        crashed['1'] = True
 
-    x2 = pos2[0][frame]
-    y2 = pos2[1][frame]
-    # update the scatter plot:
-    data2 = [x2, y2]
-    Cannonplt2.set_offsets(data2)
+    if np.sqrt(pos2[0][frame]**2 + pos2[1][frame]**2) > Rearth:
+        if not crashed['2']:
+            x2 = pos2[0][frame]
+            y2 = pos2[1][frame]
+            # update the scatter plot:
+            data2 = [x2, y2]
+            Cannonplt2.set_offsets(data2)
+        else:
+            data2 = [0, 0]
+            Cannonplt2.set_offsets(data2)
+    else:
+        crashed['2'] = True
 
-    x3 = pos3[0][frame]
-    y3 = pos3[1][frame]
-    # update the scatter plot:
-    data3 = [x3, y3]
-    Cannonplt3.set_offsets(data3)
-
+    if np.sqrt(pos3[0][frame]**2 + pos3[1][frame]**2) > Rearth:
+        if not crashed['3']:
+            x3 = pos3[0][frame]
+            y3 = pos3[1][frame]
+            # update the scatter plot:
+            data3 = [x3, y3]
+            Cannonplt3.set_offsets(data3)
+        else:
+            data3 = [0, 0]
+            Cannonplt3.set_offsets(data3)
+    else:
+        crashed['3'] = True
     return(Cannonplt1,Cannonplt2,Cannonplt3)
 
-ani = animation.FuncAnimation(fig=fig, func=update, frames=3600, interval=0.1)
+ani = animation.FuncAnimation(fig=fig, func=update, frames=3600, interval=0.1, repeat=False)
+crashed = {'1': False, '2': False, '3': False}
 # writer = animation.PillowWriter(fps=60,
 #                                 metadata=dict(artist='Me'),
 #                                 bitrate=-1)
